@@ -1,0 +1,48 @@
+[versions]
+springBoot = "2.7.1"
+spring = '5.3.21'
+cache2k = '2.6.1.Final'
+lucene = '7.1.0'
+jackson = '2.14.1'
+
+[libraries]
+spring-core={ module="org.springframework:spring-core", version.ref="spring" }
+springboot-config={ module="org.springframework.boot:spring-boot-configuration-processor", version.ref="springBoot" }
+springboot-web={ module="org.springframework.boot:spring-boot-starter-web", version.ref="springBoot" }
+springboot-starter= {module='org.springframework.boot:spring-boot-starter', version.ref="springBoot"}
+springboot-starter-data-rest={module="org.springframework.boot:spring-boot-starter-data-rest", version.ref="springBoot"}
+springboot-starter-neo4j={ module="org.springframework.boot:spring-boot-starter-data-neo4j", version.ref="springBoot" }
+springboot-starter-validation={ module="org.springframework.boot:spring-boot-starter-validation", version.ref="springBoot" }
+servletApi="javax.servlet:javax.servlet-api:3.1.0"
+
+univocity="com.univocity:univocity-parsers:2.9.1"
+
+gson="com.google.code.gson:gson:2.9.1"
+jackson-annotations={module='com.fasterxml.jackson.core:jackson-annotations', version.ref='jackson'}
+jackson-databind={module='com.fasterxml.jackson.core:jackson-databind', version.ref='jackson'}
+
+units-api='javax.measure:unit-api:2.0'
+units-indriya='tech.units:indriya:2.0.4'
+units-quantity= 'systems.uom:systems-quantity:2.0.2'
+units-ucum='systems.uom:systems-ucum:2.0.2'
+units-jackson='tech.uom.lib:uom-lib-jackson:2.0.1'
+
+aws-javaSdk="com.amazonaws:aws-java-sdk:1.12.275"
+aws-lambda-events="com.amazonaws:aws-lambda-java-events:2.0.2"
+aws-lambda-core="com.amazonaws:aws-lambda-java-core:1.1.0"
+aws-s3="com.amazonaws:aws-java-sdk-s3:1.11.271"
+aws-eventbridge="com.amazonaws:aws-java-sdk-eventbridge:1.12.300"
+aws-lambda-javaRIC="com.amazonaws:aws-lambda-java-runtime-interface-client:2.1.1"
+
+opensearch-client="org.opensearch.client:opensearch-rest-high-level-client:1.2.0"
+
+da-cdb='io.github.duckasteroid.cdb:sg-cdb-library:1.0.3'
+
+slf4j-simple='org.slf4j:slf4j-simple:2.0.0-beta1'
+slf4j-log4j='org.slf4j:slf4j-log4j12:1.7.28'
+
+cache2k-api={ module='org.cache2k:cache2k-api', version.ref='cache2k' }
+cache2k-core={ module='org.cache2k:cache2k-core', version.ref='cache2k' }
+
+lucene-core={ module='org.apache.lucene:lucene-core', version.ref='lucene' }
+lucene-queryparser={ module='org.apache.lucene:lucene-queryparser', version.ref='lucene' }

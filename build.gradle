@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'io.freefair.lombok' version('6.5.0.3')
+    id 'org.springframework.boot' version('3.0.2')
+    id 'io.spring.dependency-management' version('1.0.12.RELEASE')
+}
+group = 'com.asteroid.duck'
+version = '0.0.1'
+description = 'An example project for Neo4J Spring Data'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.springboot.starter
+    testImplementation testLibs.springboot.starterTest
+    annotationProcessor libs.springboot.config
+    implementation libs.springboot.config
+    implementation libs.springboot.starter.validation
+    implementation libs.springboot.starter.neo4j
+    implementation(libs.springboot.starter.data.rest)
+    implementation libs.jackson.annotations
+    implementation libs.jackson.databind
+
+    implementation 'org.webjars:hal-explorer:1.2.0'
+}
