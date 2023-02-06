@@ -18,7 +18,7 @@ public class WebConfig {
             public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors)
             {
                 cors.addMapping("/**").allowedMethods("*");
-                config.exposeIdsFor(Attends.class, Class.class, Person.class);
+                config.exposeIdsFor(Attends.class, com.asteroid.duck.sdn.model.Class.class, Person.class);
             }
         };
     }
