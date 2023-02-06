@@ -11,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -31,5 +32,5 @@ public class Person {
 	private String sex;
 
 	@Relationship(value = "ATTENDS", direction = Relationship.Direction.OUTGOING)
-	private List<Attends> classesAttended;
+	private Set<Attends> classesAttended;
 }
