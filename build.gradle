@@ -1,28 +1,88 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
     id 'java'
     id 'application'
-    id 'io.freefair.lombok' version('6.5.0.3')
-    id 'org.springframework.boot' version('3.0.2')
-    id 'io.spring.dependency-management' version('1.0.12.RELEASE')
+    id 'io.freefair.lombok' version('8.1.0')
+    id 'org.springframework.boot' version('3.1.1')
+    id 'io.spring.dependency-management' version('1.1.2')
+    id "com.github.ben-manes.versions" version('0.47.0')
+    id 'com.bmuschko.docker-remote-api' version('9.3.1')
+
 }
+
 group = 'com.asteroid.duck'
 version = '0.0.1'
 description = 'An example project for Neo4J Spring Data'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation libs.springboot.starter
-    testImplementation testLibs.springboot.starterTest
-    annotationProcessor libs.springboot.config
-    implementation libs.springboot.config
-    implementation libs.springboot.starter.validation
-    implementation libs.springboot.starter.neo4j
-    implementation(libs.springboot.starter.data.rest)
-    implementation libs.jackson.annotations
-    implementation libs.jackson.databind
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework:spring-framework-bom:6.0.11"
+        mavenBom "org.springframework.data:spring-data-bom:2023.0.2"
+    }
+}
 
-    implementation 'org.webjars:hal-explorer:1.2.0'
+dependencies {
+    implementation platform(SpringBootPlugin.BOM_COORDINATES)
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.1'
+    testImplementation "org.testcontainers:testcontainers:1.18.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.18.3"
+    testImplementation "org.testcontainers:neo4j:1.18.3"
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+
+task pullNeo4J(type: DockerPullImage) {
+    image = 'neo4j:5.9.0'
+}
+
+task createNeo4JContainer(type: DockerCreateContainer) {
+    group "neo4j"
+    dependsOn pullNeo4J
+    targetImageId 'neo4j:5.9.0'
+    withEnvVar("NEO4J_AUTH", "neo4j/Neo4J@TheMovies" )
+    withEnvVar("NEO4J_PLUGINS", '["apoc"]')
+    hostConfig.portBindings = ['7474:7474', '7687:7687']
+    containerName = "movies-neo4j"
+    hostConfig.binds = [
+            ("${projectDir}/src/test/resources" as String): '/var/lib/neo4j/resources']
+
+}
+
+task startNeo4J(type: DockerStartContainer) {
+    group "neo4j"
+    dependsOn createNeo4JContainer
+    targetContainerId createNeo4JContainer.getContainerId()
+}
+
+static def cypherShell(String ... cypher) {
+    return ['cypher-shell', '-u', 'neo4j', '-p', 'Neo4J@TheMovies', '-d', 'neo4j'].addAll(cypher) as String[]
+}
+
+task initDatabase(type: DockerExecContainer) {
+    //dependsOn startNeo4J
+    group "neo4j"
+    targetContainerId createNeo4JContainer.getContainerId()
+    attachStdout = true
+    attachStderr = true
+    commands.add(cypherShell( '-f', '/var/lib/neo4j/resources/movie-graph.cql'))
 }
